@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.env
+.venv/
+venv/
+data/raw/
+data/processed/
+artifacts/
+*.duckdb
+.DS_Store
+.ipynb_checkpoints/
+dist/
+*.egg-info/
