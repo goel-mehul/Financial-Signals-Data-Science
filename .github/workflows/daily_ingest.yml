@@ -1,0 +1,39 @@
+name: Daily data refresh
+
+on:
+  schedule:
+    - cron: "0 14 * * 1-5"   # 9am ET, weekdays only
+  workflow_dispatch:           # allows manual trigger from GitHub UI
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -e .
+
+      - name: Run ingestion pipeline
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        run: |
+          python ingestion/market.py
+          python ingestion/macro.py
+          python ingestion/loader.py
+          python ingestion/cleaner.py
+          python ingestion/quality_report.py
+
+      - name: Commit updated quality report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/quality_report/
+          git diff --cached --quiet || git commit -m "chore: daily data refresh $(date -u +%Y-%m-%d)"
+          git push
