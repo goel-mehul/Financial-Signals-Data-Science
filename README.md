@@ -36,19 +36,43 @@ FRED API (macro)  ──┤──▶ DuckDB ──▶ Cleaning ──▶ Feature
 
 ---
 
-## Key results
+## Key results — v2
 
-| Ticker | Model | Sharpe | IC | Hit Rate |
-|--------|-------|--------|----|----------|
-| SPY | LightGBM | 0.42 | 0.12 | 50.6% |
-| QQQ | LightGBM | 0.12 | 0.11 | 49.5% |
-| NVDA | LightGBM | 0.22 | 0.08 | 53.1% |
-| XLF | LightGBM | 0.22 | 0.10 | 48.8% |
-| XLK | LightGBM | 0.32 | 0.08 | 51.5% |
+| Ticker | Best Model | Sharpe | IC | Hit Rate | Sector |
+|--------|-----------|--------|----|----------|--------|
+| XLU | LightGBM | 0.94 | 0.14 | 56.9% | Utilities |
+| XLV | LightGBM | 0.74 | 0.14 | 53.6% | Healthcare |
+| JNJ | XGBoost | 0.70 | 0.15 | 54.2% | Healthcare |
+| XLK | LightGBM | 0.67 | 0.07 | 52.6% | Technology |
+| XLI | LightGBM | 0.57 | 0.05 | 51.6% | Industrials |
+| QQQ | LightGBM | 0.55 | 0.07 | 52.7% | Tech index |
+| XLV | XGBoost | 0.57 | 0.12 | 51.9% | Healthcare |
+| AVGO | LightGBM | 0.48 | 0.04 | 51.8% | Semiconductors |
+| MSFT | LightGBM | 0.47 | 0.07 | 50.5% | Technology |
+| WMT | XGBoost | 0.43 | 0.11 | 53.2% | Consumer staples |
 
-> Evaluated via 5-fold walk-forward validation. No lookahead bias.
-> LightGBM + Optuna outperformed XGBoost baseline on average Sharpe (0.21 vs 0.06).
+> 10-year data (2016-2026) · 5-fold walk-forward validation · No lookahead bias
+> Regime-conditioned features: VIX regime, yield curve slope, drawdown, macro stress index
 
+## Key findings
+
+**Defensive and rate-sensitive sectors show strongest signal** — XLU, XLV, 
+XLP all have Sharpe > 0.4 and IC > 0.08. These sectors respond predictably 
+to interest rate regimes which our yield curve and macro stress features capture directly.
+
+**Growth stocks remain unpredictable** — NVDA, META, AMD show near-zero or 
+negative Sharpe. These are driven by earnings surprises and narrative shifts 
+that macro/technical features cannot anticipate.
+
+**Energy is structurally unforecastable** — XOM, XLE show strongly negative 
+Sharpe. Oil prices are driven by geopolitical events which are inherently 
+unpredictable from market data alone.
+
+**Top SHAP features across winning tickers:**
+- yield_curve_slope — universal macro signal
+- vol_regime — relative volatility vs own history  
+- macro_stress — composite fear/rate/vol index
+- drawdown_52w — distance from 52-week high
 ---
 
 ## Time series findings
