@@ -204,5 +204,5 @@ def run_shap_analysis(
         print(f"Top feature: {top_features[0]}\n")
 
 if __name__ == "__main__":
-    df = pd.read_parquet("data/processed/full_features.parquet")
+    df = pd.read_parquet("data/processed/full_features_v2.parquet")
     run_shap_analysis(df)

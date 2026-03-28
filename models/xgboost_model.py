@@ -94,5 +94,5 @@ def run_all_tickers(
     return summary
 
 if __name__ == "__main__":
-    df = pd.read_parquet("data/processed/full_features.parquet")
+    df = pd.read_parquet("data/processed/full_features_v2.parquet")
     run_all_tickers(df)

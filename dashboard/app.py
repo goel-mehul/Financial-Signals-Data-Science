@@ -19,7 +19,7 @@ st.caption("Time-series driven signal pipeline · XGBoost + LightGBM · Walk-for
 
 @st.cache_data
 def load_data():
-    df = pd.read_parquet("data/processed/full_features.parquet")
+    df = pd.read_parquet("data/processed/full_features_v2.parquet")
     df["date"] = pd.to_datetime(df["date"])
     return df
 

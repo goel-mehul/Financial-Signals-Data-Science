@@ -115,9 +115,51 @@ def add_regime_features(df: pd.DataFrame) -> pd.DataFrame:
 
     return df
 
+def fill_regime_nulls(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Fill nulls in regime features intelligently.
+    - Rate of change features: fill with 0 (no change)
+    - Regime flags: fill with 0 (unknown = neutral)
+    - Continuous features: forward fill within ticker then fill with median
+    """
+    # Rate of change features — null means no data yet, treat as no change
+    roc_cols = [
+        "M2_mom_1m", "M2_mom_3m", "CPI_mom_1m",
+        "fed_funds_change_3m", "yield_change_1m",
+        "CPI_mom_change", "yield_21d_change",
+    ]
+    for col in roc_cols:
+        if col in df.columns:
+            df[col] = df[col].fillna(0)
+
+    # Regime flags — fill with neutral (0)
+    flag_cols = [
+        "vix_regime_low", "vix_regime_normal",
+        "vix_regime_elevated", "vix_regime_crisis",
+        "yield_curve_inverted", "vol_expanding",
+    ]
+    for col in flag_cols:
+        if col in df.columns:
+            df[col] = df[col].fillna(0)
+
+    # Continuous regime features — forward fill within ticker then median
+    continuous_cols = [
+        "yield_curve_slope", "macro_stress",
+        "drawdown_52w", "vol_regime",
+        "rolling_beta", "rel_strength_21d",
+    ]
+    for col in continuous_cols:
+        if col in df.columns:
+            df[col] = df.groupby("ticker")[col].transform(
+                lambda x: x.ffill().fillna(x.median())
+            )
+
+    return df
+
 if __name__ == "__main__":
-    df = pd.read_parquet("data/processed/full_features.parquet")
+    df = pd.read_parquet("data/processed/full_features_v2.parquet")
     df_regime = add_regime_features(df)
+    df_regime = fill_regime_nulls(df_regime)
 
     Path("data/processed").mkdir(exist_ok=True)
     df_regime.to_parquet(
@@ -135,3 +177,4 @@ if __name__ == "__main__":
     ]
     available = [c for c in regime_cols if c in spy.columns]
     print(spy[available].tail(5).to_string(index=False))
+

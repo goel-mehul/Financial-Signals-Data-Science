@@ -238,7 +238,7 @@ def get_current_signals(
 def generate_report() -> None:
     print("Generating insight report...")
 
-    df = pd.read_parquet("data/processed/full_features.parquet")
+    df = pd.read_parquet("data/processed/full_features_v2.parquet")
 
     tickers = ["SPY", "QQQ", "AAPL", "MSFT", "NVDA", "XLF", "XLK"]
     tickers = [t for t in tickers if t in df["ticker"].values]
