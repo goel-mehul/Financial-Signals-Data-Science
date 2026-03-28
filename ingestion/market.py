@@ -20,18 +20,26 @@ TICKERS = [
     "SPY", "QQQ", "XLF", "XLK", "XLE", "XLV", "XLI", "XLP", "XLU", "XLB"
 ]
 
-def fetch_ticker(ticker: str, period: str = "5y") -> pd.DataFrame | None:
+def fetch_ticker(ticker: str, period: str = "10y") -> pd.DataFrame | None:
     try:
         t = yf.Ticker(ticker)
         df = t.history(period=period, auto_adjust=True)
         if df.empty or len(df) < 252:
             log.warning(f"Skipping {ticker}: only {len(df)} rows")
             return None
+        # The index IS the date — save it before resetting
         df.index = pd.to_datetime(df.index)
         df.index = df.index.tz_localize(None)
-        df.columns = [c.lower() for c in df.columns]
+        df.index.name = "date"
+        # Lowercase all columns
+        df.columns = [c.lower().replace(" ", "_") for c in df.columns]
         df["ticker"] = ticker
-        return df.reset_index().rename(columns={"index": "date"})
+        # Reset index — date becomes a regular column
+        df = df.reset_index()
+        # Keep only what we need
+        keep = ["date", "open", "high", "low", "close", "volume", "ticker"]
+        df = df[[c for c in keep if c in df.columns]]
+        return df
     except Exception as e:
         log.error(f"Failed {ticker}: {e}")
         return None
@@ -51,7 +59,7 @@ def ingest_all(period: str = "5y") -> None:
         time.sleep(0.5)  # small delay to avoid rate limiting
 
 def main():
-    ingest_all()
+    ingest_all(period="10y")
 
 if __name__ == "__main__":
     main()
