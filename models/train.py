@@ -8,16 +8,28 @@ import warnings
 warnings.filterwarnings("ignore")
 
 FEATURE_COLS = [
+    # Technical
     "rsi_14", "atr_14", "zscore_63",
     "mom_5d", "mom_10d", "mom_21d", "mom_63d",
     "vol_5d", "vol_21d", "vol_63d",
     "macd", "macd_signal", "macd_hist",
-    "bb_pct",
-    "CPI_lag1", "FedFunds_lag1", "Unemployment_lag1",
-    "Yield10yr_lag1", "M2_lag1", "VIX_lag1",
-    "CPI_mom_change", "yield_21d_change", "vix_high_regime",
-    "vol_ratio",
+    "bb_pct", "vol_ratio",
+
+    # Macro rates of change (not levels — avoids time proxy)
+    "CPI_mom_change", "yield_21d_change",
+    "CPI_mom_1m", "M2_mom_1m", "M2_mom_3m",
+    "fed_funds_change_3m", "yield_change_1m",
+
+    # Regime features
+    "vix_level",
+    "vix_regime_low", "vix_regime_normal",
+    "vix_regime_elevated", "vix_regime_crisis",
+    "yield_curve_slope", "yield_curve_inverted",
+    "drawdown_52w", "vol_regime", "vol_expanding",
+    "rolling_beta", "rel_strength_21d",
+    "macro_stress",
 ]
+
 TARGET_COL = "fwd_5d_return"
 
 @dataclass
