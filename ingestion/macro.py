@@ -28,7 +28,8 @@ def ingest_macro() -> None:
     df = pd.DataFrame(frames)
     df.index = pd.to_datetime(df.index)
     df.index.name = "date"
-    df.to_parquet(FRED_DIR / "macro_indicators.parquet")
+    df = df.reset_index()
+    df.to_parquet(FRED_DIR / "macro_indicators.parquet", index=False)
     print(f"Macro data saved: {df.shape}")
     print(df.tail())
 

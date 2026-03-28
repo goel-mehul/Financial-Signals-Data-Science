@@ -1,0 +1,443 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FinSignal Weekly Insight Report</title>
+  <style>
+    body { font-family: monospace; background: #0f0f0f; color: #e0e0e0;
+           padding: 2rem; max-width: 900px; margin: 0 auto; }
+    h1   { color: #4fc3f7; border-bottom: 1px solid #333; padding-bottom: 0.5rem; }
+    h2   { color: #81d4fa; margin-top: 2rem; }
+    h3   { color: #b0bec5; margin-top: 1.5rem; }
+    p    { color: #aaa; line-height: 1.7; }
+    table { border-collapse: collapse; width: 100%; margin-top: 0.75rem; }
+    th { background: #1e1e1e; color: #4fc3f7; padding: 8px 12px;
+         text-align: left; border: 1px solid #333; font-size: 13px; }
+    td { padding: 6px 12px; border: 1px solid #222; font-size: 13px; }
+    tr:nth-child(even) { background: #1a1a1a; }
+    .good    { color: #81c784; }
+    .warn    { color: #ffb74d; }
+    .bad     { color: #e57373; }
+    .neutral { color: #aaa; }
+    .card  { background: #1a1a2e; border: 1px solid #2a2a4e;
+             border-radius: 6px; padding: 1rem 1.25rem; margin: 0.75rem 0; }
+    .signal-up   { color: #81c784; font-weight: bold; }
+    .signal-down { color: #e57373; font-weight: bold; }
+    .signal-flat { color: #ffb74d; font-weight: bold; }
+    .tag { display: inline-block; padding: 2px 8px; border-radius: 4px;
+           font-size: 11px; margin: 2px; }
+    .tag-bull { background: #1b3a1f; color: #81c784; }
+    .tag-bear { background: #3a1b1b; color: #e57373; }
+    .tag-neutral { background: #2a2a1b; color: #ffb74d; }
+  </style>
+</head>
+<body>
+  <h1>FinSignal — weekly insight report</h1>
+  <p>Generated: <strong>2026-03-27 19:44</strong> &nbsp;|&nbsp;
+     Pipeline version: 1.0 &nbsp;|&nbsp;
+     Models: XGBoost, LightGBM + Optuna</p>
+
+  <h2>Market regime</h2>
+  <div class="card">
+    <p><strong>VIX:</strong>
+      <span class="bad">
+        27.44</span>
+      &nbsp;
+      
+        <span class="tag tag-bear">high fear</span>
+      
+    </p>
+    <p><strong>Fed Funds Rate:</strong> 3.64%</p>
+    <p><strong>10yr Yield:</strong> 4.13%</p>
+    <p><strong>CPI (latest):</strong> 327.46</p>
+    <p><strong>Unemployment:</strong> 4.4%</p>
+  </div>
+
+  <h2>Model signals — top tickers</h2>
+  <p>Current model signal for each ticker based on latest features.
+     Signal = predicted 5-day forward return direction.</p>
+  <table>
+    <tr>
+      <th>Ticker</th>
+      <th>Close</th>
+      <th>RSI</th>
+      <th>Vol 21d</th>
+      <th>LGBM signal</th>
+      <th>Regime</th>
+    </tr>
+    
+    <tr>
+      <td>SPY</td>
+      <td>$636.04</td>
+      <td class="good">
+        24.2</td>
+      <td>0.90%</td>
+      <td>
+        
+          <span class="signal-down">▼ SHORT</span>
+        
+      </td>
+      <td>
+        
+          <span class="tag tag-bear">high vol</span>
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td>QQQ</td>
+      <td>$563.47</td>
+      <td class="good">
+        23.3</td>
+      <td>1.15%</td>
+      <td>
+        
+          <span class="signal-down">▼ SHORT</span>
+        
+      </td>
+      <td>
+        
+          <span class="tag tag-bear">high vol</span>
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td>AAPL</td>
+      <td>$249.89</td>
+      <td class="neutral">
+        33.3</td>
+      <td>1.17%</td>
+      <td>
+        
+          <span class="signal-down">▼ SHORT</span>
+        
+      </td>
+      <td>
+        
+          <span class="tag tag-bear">high vol</span>
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td>MSFT</td>
+      <td>$358.77</td>
+      <td class="good">
+        9.0</td>
+      <td>1.25%</td>
+      <td>
+        
+          <span class="signal-up">▲ LONG</span>
+        
+      </td>
+      <td>
+        
+          <span class="tag tag-bear">high vol</span>
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td>NVDA</td>
+      <td>$167.85</td>
+      <td class="neutral">
+        31.7</td>
+      <td>2.18%</td>
+      <td>
+        
+          <span class="signal-up">▲ LONG</span>
+        
+      </td>
+      <td>
+        
+          <span class="tag tag-bear">high vol</span>
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td>XLF</td>
+      <td>$48.06</td>
+      <td class="good">
+        24.6</td>
+      <td>0.84%</td>
+      <td>
+        
+          <span class="signal-up">▲ LONG</span>
+        
+      </td>
+      <td>
+        
+          <span class="tag tag-bear">high vol</span>
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td>XLK</td>
+      <td>$129.94</td>
+      <td class="good">
+        27.8</td>
+      <td>1.44%</td>
+      <td>
+        
+          <span class="signal-flat">— FLAT</span>
+        
+      </td>
+      <td>
+        
+          <span class="tag tag-bear">high vol</span>
+        
+      </td>
+    </tr>
+    
+  </table>
+
+  <h2>Model performance summary</h2>
+  <table>
+    <tr>
+      <th>Ticker</th><th>Model</th><th>Sharpe</th>
+      <th>IC</th><th>Hit rate</th><th>Assessment</th>
+    </tr>
+    
+    <tr>
+      <td>SPY</td>
+      <td>xgboost</td>
+      <td class="warn">
+        0.093</td>
+      <td class="good">
+        0.09</td>
+      <td>48.1%</td>
+      <td>
+        
+          <span class="tag tag-neutral">weak signal</span>
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td>SPY</td>
+      <td>lgbm</td>
+      <td class="good">
+        0.423</td>
+      <td class="good">
+        0.118</td>
+      <td>50.6%</td>
+      <td>
+        
+          <span class="tag tag-bull">strong signal</span>
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td>QQQ</td>
+      <td>xgboost</td>
+      <td class="warn">
+        0.027</td>
+      <td class="good">
+        0.087</td>
+      <td>48.9%</td>
+      <td>
+        
+          <span class="tag tag-neutral">weak signal</span>
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td>QQQ</td>
+      <td>lgbm</td>
+      <td class="warn">
+        0.118</td>
+      <td class="good">
+        0.11</td>
+      <td>49.5%</td>
+      <td>
+        
+          <span class="tag tag-neutral">weak signal</span>
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td>AAPL</td>
+      <td>xgboost</td>
+      <td class="bad">
+        -0.14</td>
+      <td class="warn">
+        0.026</td>
+      <td>48.3%</td>
+      <td>
+        
+          <span class="tag tag-bear">no signal</span>
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td>AAPL</td>
+      <td>lgbm</td>
+      <td class="bad">
+        -0.042</td>
+      <td class="bad">
+        -0.003</td>
+      <td>48.1%</td>
+      <td>
+        
+          <span class="tag tag-bear">no signal</span>
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td>MSFT</td>
+      <td>xgboost</td>
+      <td class="warn">
+        0.037</td>
+      <td class="warn">
+        0.019</td>
+      <td>47.4%</td>
+      <td>
+        
+          <span class="tag tag-neutral">weak signal</span>
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td>MSFT</td>
+      <td>lgbm</td>
+      <td class="bad">
+        -0.025</td>
+      <td class="warn">
+        0.004</td>
+      <td>47.5%</td>
+      <td>
+        
+          <span class="tag tag-bear">no signal</span>
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td>NVDA</td>
+      <td>xgboost</td>
+      <td class="warn">
+        0.127</td>
+      <td class="good">
+        0.069</td>
+      <td>51.7%</td>
+      <td>
+        
+          <span class="tag tag-neutral">weak signal</span>
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td>NVDA</td>
+      <td>lgbm</td>
+      <td class="warn">
+        0.221</td>
+      <td class="good">
+        0.071</td>
+      <td>53.1%</td>
+      <td>
+        
+          <span class="tag tag-neutral">weak signal</span>
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td>XLF</td>
+      <td>xgboost</td>
+      <td class="warn">
+        0.031</td>
+      <td class="good">
+        0.078</td>
+      <td>48.1%</td>
+      <td>
+        
+          <span class="tag tag-neutral">weak signal</span>
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td>XLF</td>
+      <td>lgbm</td>
+      <td class="warn">
+        0.224</td>
+      <td class="good">
+        0.104</td>
+      <td>48.8%</td>
+      <td>
+        
+          <span class="tag tag-neutral">weak signal</span>
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td>XLK</td>
+      <td>xgboost</td>
+      <td class="warn">
+        0.23</td>
+      <td class="good">
+        0.072</td>
+      <td>49.7%</td>
+      <td>
+        
+          <span class="tag tag-neutral">weak signal</span>
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td>XLK</td>
+      <td>lgbm</td>
+      <td class="good">
+        0.32</td>
+      <td class="good">
+        0.08</td>
+      <td>51.5%</td>
+      <td>
+        
+          <span class="tag tag-bull">strong signal</span>
+        
+      </td>
+    </tr>
+    
+  </table>
+
+  <h2>Anomalies detected</h2>
+  
+  <p class="neutral">No anomalies detected in the current window.</p>
+  
+
+  <h2>Methodology</h2>
+  <div class="card">
+    <p>
+      <strong>Data:</strong> 5yr daily OHLCV for 80 S&P 500 tickers +
+      FRED macro indicators (CPI, Fed Funds, Unemployment, 10yr Yield, M2, VIX).
+    </p>
+    <p>
+      <strong>Features:</strong> 24 features including RSI, MACD, Bollinger Bands,
+      ATR, rolling z-score, momentum (5/10/21/63d), volatility (5/21/63d),
+      and lagged macro indicators.
+    </p>
+    <p>
+      <strong>Models:</strong> XGBoost (baseline) and LightGBM with Optuna
+      Bayesian HPO (30 trials). Both evaluated via 5-fold walk-forward
+      validation with no lookahead bias.
+    </p>
+    <p>
+      <strong>Target:</strong> 5-day forward return. Macro features lagged
+      by 1 period to prevent data leakage.
+    </p>
+  </div>
+</body>
+</html>
