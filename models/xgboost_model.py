@@ -76,7 +76,24 @@ def run_all_tickers(
     tickers: list[str] = None,
 ) -> pd.DataFrame:
     if tickers is None:
-        tickers = ["SPY", "QQQ", "AAPL", "MSFT", "NVDA", "XLF", "XLK"]
+        tickers = [
+    # Broad market
+    "SPY", "QQQ", "IWM",
+    # Tech
+    "AAPL", "MSFT", "NVDA", "GOOGL", "META", "AVGO", "AMD",
+    # Finance
+    "JPM", "BAC", "GS", "XLF",
+    # Healthcare
+    "JNJ", "UNH", "XLV",
+    # Energy
+    "XOM", "CVX", "XLE",
+    # Consumer
+    "AMZN", "COST", "WMT",
+    # Sector ETFs
+    "XLK", "XLI", "XLP", "XLU", "XLB",
+    # Bonds / macro proxy
+    "TLT", "GLD",
+    ]
 
     all_metrics = []
     for ticker in tickers:
