@@ -43,17 +43,26 @@ comparison = load_comparison()
 tickers    = sorted(df["ticker"].unique())
 
 # ── Sidebar ──────────────────────────────────────────────
+
 st.sidebar.header("Controls")
-ticker = st.sidebar.selectbox(
-    "Ticker",
-    tickers,
-    index=tickers.index("SPY") if "SPY" in tickers else 0,
-)
-model_name = st.sidebar.selectbox(
-    "Model",
-    ["lgbm", "xgboost"],
-    format_func=lambda x: "LightGBM" if x == "lgbm" else "XGBoost",
-)
+
+# Group tickers by sector
+sector_tickers = {
+    "Broad market": ["SPY", "QQQ", "IWM"],
+    "Technology": ["AAPL", "MSFT", "NVDA", "GOOGL", "META", "AVGO", "AMD", "XLK"],
+    "Healthcare": ["JNJ", "UNH", "XLV"],
+    "Finance": ["JPM", "BAC", "GS", "XLF"],
+    "Consumer": ["AMZN", "COST", "WMT", "XLP"],
+    "Energy": ["XOM", "CVX", "XLE"],
+    "Other sectors": ["XLI", "XLU", "XLB"]
+}
+all_tickers = [t for group in sector_tickers.values() for t in group]
+available_tickers = [t for t in all_tickers if t in tickers]
+
+sector = st.sidebar.selectbox("Sector", list(sector_tickers.keys()))
+sector_list = [t for t in sector_tickers[sector] if t in tickers]
+ticker = st.sidebar.selectbox("Ticker", sector_list if sector_list else available_tickers)
+
 start_date = st.sidebar.date_input(
     "From",
     value=pd.Timestamp("2022-01-01"),
@@ -166,7 +175,20 @@ st.plotly_chart(fig, use_container_width=True)
 st.markdown("---")
 st.subheader("Model signal")
 
-pred_path = Path(f"artifacts/{model_name}_{ticker}_preds.parquet")
+model_options = {
+    "LightGBM": f"lgbm_{ticker}_preds.parquet",
+    "XGBoost": f"xgboost_{ticker}_preds.parquet",
+    "Regime LightGBM": f"regime_lgbm_{ticker}_preds.parquet",
+}
+
+col_m1, col_m2 = st.columns([2, 1])
+with col_m1:
+    selected_model = st.selectbox(
+        "Model",
+        list(model_options.keys()),
+    )
+
+pred_path = Path(f"artifacts/{model_options[selected_model]}")
 if pred_path.exists():
     preds = pd.read_parquet(pred_path)
     preds["date"] = pd.to_datetime(preds["date"])
@@ -176,7 +198,6 @@ if pred_path.exists():
     ]
 
     if not preds.empty:
-        # Cumulative returns
         strategy_ret = np.sign(preds["predicted"].values) * preds["actual"].values
         bh_ret       = preds["actual"].values
         cum_strategy = np.cumsum(strategy_ret)
@@ -185,7 +206,7 @@ if pred_path.exists():
         fig2 = go.Figure()
         fig2.add_trace(go.Scatter(
             x=preds["date"], y=cum_strategy,
-            name=f"{model_name} strategy",
+            name=f"{selected_model} strategy",
             line=dict(color="#ffb74d", width=1.5),
         ))
         fig2.add_trace(go.Scatter(
@@ -196,7 +217,7 @@ if pred_path.exists():
         fig2.add_hline(y=0, line_dash="dash",
                        line_color="gray", line_width=0.5)
         fig2.update_layout(
-            title=f"Cumulative returns — {model_name} signal vs buy & hold",
+            title=f"Cumulative returns — {selected_model} vs buy & hold",
             height=350,
             margin=dict(l=0, r=0, t=40, b=0),
             paper_bgcolor="rgba(0,0,0,0)",
@@ -204,7 +225,6 @@ if pred_path.exists():
         )
         st.plotly_chart(fig2, use_container_width=True)
 
-        # Metrics
         from scipy.stats import spearmanr
         ic, _    = spearmanr(preds["predicted"], preds["actual"])
         hit_rate = np.mean(
@@ -219,8 +239,8 @@ if pred_path.exists():
         c2.metric("IC",       f"{ic:.3f}")
         c3.metric("Hit rate", f"{hit_rate:.1%}")
 else:
-    st.info(f"No predictions found for {model_name} on {ticker}. Train the model first.")
-
+    st.info(f"No predictions found for {selected_model} on {ticker}.")
+    
 # ── Model comparison table ────────────────────────────────
 if not comparison.empty:
     st.markdown("---")
